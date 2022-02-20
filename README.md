@@ -6,9 +6,9 @@
 
 <ul>
     <li> Design and simulation of Analog Circuits on LT SPICE XVII </li>
+    <li> PCB and Schematic KiCad Designs </li>
      <li> Matlab Simulations </li>
-       <li>  College Reports </li>
-        <li> PCB and Schematic KiCad Designs </li>
+    <li>  College Reports </li>
 </ul>  
 
 <h4>Digital Design:</h4>
