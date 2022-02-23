@@ -26,3 +26,10 @@
      <li> Digital Signal Processing </li>
      <li> Analog and digital Demodulators/Modulators </li>
 </ul>  
+
+<h4>Control Engineering:</h4>
+
+<ul>
+    <li> Scilab scripts </li>
+     <li> Control models simulations </li>
+</ul>  
