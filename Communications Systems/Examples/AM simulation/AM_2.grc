@@ -37,41 +37,20 @@ blocks:
   parameters:
     comment: ''
     gui_hint: ''
-    label: M
+    label: Indice de Modulacion
     min_len: '200'
     orient: Qt.Horizontal
     rangeType: float
-    start: '0.01'
-    step: '0.01'
+    start: '0.1'
+    step: '0.1'
     stop: '1'
-    value: '0.01'
+    value: '0.5'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [520, 20.0]
-    rotation: 0
-    state: true
-- name: fol
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: ''
-    label: oscilator rx
-    min_len: '200'
-    orient: Qt.Horizontal
-    rangeType: float
-    start: '1000'
-    step: '5000'
-    stop: '100000'
-    value: '100000'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [800, 20.0]
+    coordinate: [485, 25]
     rotation: 0
     state: true
 - name: noise
@@ -83,16 +62,16 @@ blocks:
     min_len: '200'
     orient: Qt.Horizontal
     rangeType: float
-    start: '0.01'
-    step: '0.01'
-    stop: '1'
-    value: '0.01'
+    start: '0.001'
+    step: '0.001'
+    stop: '0.1'
+    value: '0.001'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [664, 20.0]
+    coordinate: [664, 20]
     rotation: 0
     state: true
 - name: samp_rate
@@ -148,7 +127,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '2'
+    amp: '1'
     comment: ''
     freq: '1000'
     maxoutbuf: '0'
@@ -170,7 +149,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    amp: '10'
+    amp: '15'
     comment: ''
     freq: '100000'
     maxoutbuf: '0'
@@ -194,7 +173,7 @@ blocks:
     alias: ''
     amp: '1'
     comment: ''
-    freq: fol
+    freq: '100000'
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'
@@ -288,6 +267,42 @@ blocks:
     coordinate: [320, 212.0]
     rotation: 0
     state: true
+- name: blocks_multiply_const_vxx_1
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '3'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [997, 768]
+    rotation: 0
+    state: true
+- name: blocks_multiply_const_vxx_1_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '5'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1145, 890]
+    rotation: 0
+    state: true
 - name: blocks_multiply_xx_0
   id: blocks_multiply_xx
   parameters:
@@ -324,6 +339,63 @@ blocks:
     coordinate: [528, 688.0]
     rotation: 0
     state: true
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1083, 979]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [859, 859]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0_0_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1188, 738]
+    rotation: 0
+    state: true
 - name: dc_blocker_xx_0
   id: dc_blocker_xx
   parameters:
@@ -351,7 +423,7 @@ blocks:
     comment: ''
     cutoff_freq: '15000'
     decim: '1'
-    gain: '1'
+    gain: '2'
     interp: '1'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -366,7 +438,7 @@ blocks:
     coordinate: [680, 652.0]
     rotation: 0
     state: true
-- name: qtgui_time_sink_x_0
+- name: qtgui_time_sink_x_0_0
   id: qtgui_time_sink_x
   parameters:
     affinity: ''
@@ -381,12 +453,12 @@ blocks:
     alpha7: '1.0'
     alpha8: '1.0'
     alpha9: '1.0'
-    autoscale: 'True'
+    autoscale: 'False'
     axislabels: 'True'
     color1: blue
     color10: dark blue
-    color2: red
-    color3: green
+    color2: green
+    color3: red
     color4: black
     color5: cyan
     color6: magenta
@@ -394,20 +466,20 @@ blocks:
     color8: dark red
     color9: dark green
     comment: ''
-    ctrlpanel: 'False'
-    entags: 'True'
-    grid: 'False'
+    ctrlpanel: 'True'
+    entags: 'False'
+    grid: 'True'
     gui_hint: ''
-    label1: Signal 1
-    label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
-    label4: Signal 4
-    label5: Signal 5
-    label6: Signal 6
-    label7: Signal 7
-    label8: Signal 8
-    label9: Signal 9
+    label1: Demodulada
+    label10: ''
+    label2: Modulante
+    label3: AM modulation
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
     legend: 'True'
     marker1: '-1'
     marker10: '-1'
@@ -419,8 +491,8 @@ blocks:
     marker7: '-1'
     marker8: '-1'
     marker9: '-1'
-    name: '"Modulante"'
-    nconnections: '1'
+    name: ''
+    nconnections: '2'
     size: '1024'
     srate: samp_rate
     stemplot: 'False'
@@ -436,16 +508,16 @@ blocks:
     style9: '1'
     tr_chan: '0'
     tr_delay: '0'
-    tr_level: '0.0'
+    tr_level: '0.5'
     tr_mode: qtgui.TRIG_MODE_AUTO
     tr_slope: qtgui.TRIG_SLOPE_POS
     tr_tag: '""'
     type: float
-    update_time: '0.10'
-    width1: '1'
+    update_time: '0.30'
+    width1: '1.5'
     width10: '1'
-    width2: '1'
-    width3: '1'
+    width2: '1.5'
+    width3: '1.5'
     width4: '1'
     width5: '1'
     width6: '1'
@@ -453,17 +525,17 @@ blocks:
     width8: '1'
     width9: '1'
     ylabel: Amplitude
-    ymax: '1'
-    ymin: '-1'
+    ymax: '2'
+    ymin: '-2'
     yunit: '""'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [304, 36.0]
+    coordinate: [1373, 762]
     rotation: 0
-    state: true
-- name: qtgui_time_sink_x_1
+    state: enabled
+- name: qtgui_time_sink_x_0_0_0
   id: qtgui_time_sink_x
   parameters:
     affinity: ''
@@ -478,12 +550,12 @@ blocks:
     alpha7: '1.0'
     alpha8: '1.0'
     alpha9: '1.0'
-    autoscale: 'True'
+    autoscale: 'False'
     axislabels: 'True'
     color1: blue
     color10: dark blue
     color2: red
-    color3: green
+    color3: red
     color4: black
     color5: cyan
     color6: magenta
@@ -491,20 +563,20 @@ blocks:
     color8: dark red
     color9: dark green
     comment: ''
-    ctrlpanel: 'False'
-    entags: 'True'
-    grid: 'False'
+    ctrlpanel: 'True'
+    entags: 'False'
+    grid: 'True'
     gui_hint: ''
-    label1: Signal 1
-    label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
-    label4: Signal 4
-    label5: Signal 5
-    label6: Signal 6
-    label7: Signal 7
-    label8: Signal 8
-    label9: Signal 9
+    label1: Modulante
+    label10: ''
+    label2: 'AM '
+    label3: AM modulation
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
     legend: 'True'
     marker1: '-1'
     marker10: '-1'
@@ -516,8 +588,8 @@ blocks:
     marker7: '-1'
     marker8: '-1'
     marker9: '-1'
-    name: '"AM"'
-    nconnections: '1'
+    name: ''
+    nconnections: '2'
     size: '1024'
     srate: samp_rate
     stemplot: 'False'
@@ -533,16 +605,16 @@ blocks:
     style9: '1'
     tr_chan: '0'
     tr_delay: '0'
-    tr_level: '0.0'
+    tr_level: '0.5'
     tr_mode: qtgui.TRIG_MODE_AUTO
     tr_slope: qtgui.TRIG_SLOPE_POS
     tr_tag: '""'
     type: float
-    update_time: '0.10'
-    width1: '1'
+    update_time: '0.30'
+    width1: '1.5'
     width10: '1'
-    width2: '1'
-    width3: '1'
+    width2: '1.5'
+    width3: '1.5'
     width4: '1'
     width5: '1'
     width6: '1'
@@ -550,113 +622,16 @@ blocks:
     width8: '1'
     width9: '1'
     ylabel: Amplitude
-    ymax: '1'
-    ymin: '-1'
+    ymax: '2'
+    ymin: '-2'
     yunit: '""'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [824, 332.0]
+    coordinate: [1429, 915]
     rotation: 0
-    state: true
-- name: qtgui_time_sink_x_1_0
-  id: qtgui_time_sink_x
-  parameters:
-    affinity: ''
-    alias: ''
-    alpha1: '1.0'
-    alpha10: '1.0'
-    alpha2: '1.0'
-    alpha3: '1.0'
-    alpha4: '1.0'
-    alpha5: '1.0'
-    alpha6: '1.0'
-    alpha7: '1.0'
-    alpha8: '1.0'
-    alpha9: '1.0'
-    autoscale: 'True'
-    axislabels: 'True'
-    color1: blue
-    color10: dark blue
-    color2: red
-    color3: green
-    color4: black
-    color5: cyan
-    color6: magenta
-    color7: yellow
-    color8: dark red
-    color9: dark green
-    comment: ''
-    ctrlpanel: 'False'
-    entags: 'True'
-    grid: 'False'
-    gui_hint: ''
-    label1: Signal 1
-    label10: Signal 10
-    label2: Signal 2
-    label3: Signal 3
-    label4: Signal 4
-    label5: Signal 5
-    label6: Signal 6
-    label7: Signal 7
-    label8: Signal 8
-    label9: Signal 9
-    legend: 'True'
-    marker1: '-1'
-    marker10: '-1'
-    marker2: '-1'
-    marker3: '-1'
-    marker4: '-1'
-    marker5: '-1'
-    marker6: '-1'
-    marker7: '-1'
-    marker8: '-1'
-    marker9: '-1'
-    name: '"Demod"'
-    nconnections: '1'
-    size: '1024'
-    srate: samp_rate
-    stemplot: 'False'
-    style1: '1'
-    style10: '1'
-    style2: '1'
-    style3: '1'
-    style4: '1'
-    style5: '1'
-    style6: '1'
-    style7: '1'
-    style8: '1'
-    style9: '1'
-    tr_chan: '0'
-    tr_delay: '0'
-    tr_level: '0.0'
-    tr_mode: qtgui.TRIG_MODE_AUTO
-    tr_slope: qtgui.TRIG_SLOPE_POS
-    tr_tag: '""'
-    type: float
-    update_time: '0.10'
-    width1: '1'
-    width10: '1'
-    width2: '1'
-    width3: '1'
-    width4: '1'
-    width5: '1'
-    width6: '1'
-    width7: '1'
-    width8: '1'
-    width9: '1'
-    ylabel: Amplitude
-    ymax: '1'
-    ymin: '-1'
-    yunit: '""'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1112, 676.0]
-    rotation: 0
-    state: true
+    state: enabled
 - name: virtual_sink_0
   id: virtual_sink
   parameters:
@@ -683,6 +658,19 @@ blocks:
     coordinate: [689, 528]
     rotation: 0
     state: enabled
+- name: virtual_sink_2
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Modulante
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [324, 273]
+    rotation: 0
+    state: true
 - name: virtual_source_0
   id: virtual_source
   parameters:
@@ -709,25 +697,58 @@ blocks:
     coordinate: [56, 684.0]
     rotation: 0
     state: enabled
+- name: virtual_source_1_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: AM Rx
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [807, 941]
+    rotation: 0
+    state: enabled
+- name: virtual_source_2
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: Modulante
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [617, 857]
+    rotation: 0
+    state: true
 
 connections:
 - [analog_const_source_x_0, '0', blocks_add_xx_0, '0']
 - [analog_noise_source_x_0, '0', blocks_add_xx_1, '0']
 - [analog_sig_source_x_0, '0', blocks_multiply_const_vxx_0, '0']
-- [analog_sig_source_x_0, '0', qtgui_time_sink_x_0, '0']
+- [analog_sig_source_x_0, '0', virtual_sink_2, '0']
 - [analog_sig_source_x_1, '0', blocks_multiply_xx_0, '1']
 - [analog_sig_source_x_1_0, '0', blocks_multiply_xx_1, '1']
 - [band_pass_filter_0, '0', blocks_multiply_xx_1, '0']
 - [blocks_add_xx_0, '0', blocks_multiply_xx_0, '0']
 - [blocks_add_xx_1, '0', virtual_sink_1, '0']
 - [blocks_multiply_const_vxx_0, '0', blocks_add_xx_0, '1']
-- [blocks_multiply_xx_0, '0', qtgui_time_sink_x_1, '0']
+- [blocks_multiply_const_vxx_1, '0', blocks_throttle_0_0_0, '0']
+- [blocks_multiply_const_vxx_1_0, '0', qtgui_time_sink_x_0_0_0, '0']
 - [blocks_multiply_xx_0, '0', virtual_sink_0, '0']
 - [blocks_multiply_xx_1, '0', low_pass_filter_0, '0']
-- [dc_blocker_xx_0, '0', qtgui_time_sink_x_1_0, '0']
+- [blocks_throttle_0, '0', qtgui_time_sink_x_0_0_0, '1']
+- [blocks_throttle_0_0, '0', blocks_multiply_const_vxx_1_0, '0']
+- [blocks_throttle_0_0, '0', qtgui_time_sink_x_0_0, '1']
+- [blocks_throttle_0_0_0, '0', qtgui_time_sink_x_0_0, '0']
+- [dc_blocker_xx_0, '0', blocks_multiply_const_vxx_1, '0']
 - [low_pass_filter_0, '0', dc_blocker_xx_0, '0']
 - [virtual_source_0, '0', blocks_add_xx_1, '1']
 - [virtual_source_1, '0', band_pass_filter_0, '0']
+- [virtual_source_1_0, '0', blocks_throttle_0, '0']
+- [virtual_source_2, '0', blocks_throttle_0_0, '0']
 
 metadata:
   file_format: 1

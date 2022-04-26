@@ -74,47 +74,43 @@ class am2(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 320000
-        self.noise = noise = 0.01
-        self.fol = fol = 100000
-        self.M = M = 0.01
+        self.noise = noise = 0.001
+        self.M = M = 0.5
 
         ##################################################
         # Blocks
         ##################################################
-        self._noise_range = Range(0.01, 1, 0.01, 0.01, 200)
+        self._noise_range = Range(0.001, 0.1, 0.001, 0.001, 200)
         self._noise_win = RangeWidget(self._noise_range, self.set_noise, 'Noise', "counter_slider", float)
         self.top_grid_layout.addWidget(self._noise_win)
-        self._fol_range = Range(1000, 100000, 5000, 100000, 200)
-        self._fol_win = RangeWidget(self._fol_range, self.set_fol, 'oscilator rx', "counter_slider", float)
-        self.top_grid_layout.addWidget(self._fol_win)
-        self._M_range = Range(0.01, 1, 0.01, 0.01, 200)
-        self._M_win = RangeWidget(self._M_range, self.set_M, 'M', "counter_slider", float)
+        self._M_range = Range(0.1, 1, 0.1, 0.5, 200)
+        self._M_win = RangeWidget(self._M_range, self.set_M, 'Indice de Modulacion', "counter_slider", float)
         self.top_grid_layout.addWidget(self._M_win)
-        self.qtgui_time_sink_x_1_0 = qtgui.time_sink_f(
+        self.qtgui_time_sink_x_0_0_0 = qtgui.time_sink_f(
             1024, #size
             samp_rate, #samp_rate
-            "Demod", #name
-            1 #number of inputs
+            '', #name
+            2 #number of inputs
         )
-        self.qtgui_time_sink_x_1_0.set_update_time(0.10)
-        self.qtgui_time_sink_x_1_0.set_y_axis(-1, 1)
+        self.qtgui_time_sink_x_0_0_0.set_update_time(0.30)
+        self.qtgui_time_sink_x_0_0_0.set_y_axis(-2, 2)
 
-        self.qtgui_time_sink_x_1_0.set_y_label('Amplitude', "")
+        self.qtgui_time_sink_x_0_0_0.set_y_label('Amplitude', "")
 
-        self.qtgui_time_sink_x_1_0.enable_tags(True)
-        self.qtgui_time_sink_x_1_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_1_0.enable_autoscale(True)
-        self.qtgui_time_sink_x_1_0.enable_grid(False)
-        self.qtgui_time_sink_x_1_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_1_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_1_0.enable_stem_plot(False)
+        self.qtgui_time_sink_x_0_0_0.enable_tags(False)
+        self.qtgui_time_sink_x_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, 0.5, 0, 0, "")
+        self.qtgui_time_sink_x_0_0_0.enable_autoscale(False)
+        self.qtgui_time_sink_x_0_0_0.enable_grid(True)
+        self.qtgui_time_sink_x_0_0_0.enable_axis_labels(True)
+        self.qtgui_time_sink_x_0_0_0.enable_control_panel(True)
+        self.qtgui_time_sink_x_0_0_0.enable_stem_plot(False)
 
 
-        labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
+        labels = ['Modulante', 'AM ', 'AM modulation', '', '',
+            '', '', '', '', '']
+        widths = [1.5, 1.5, 1.5, 1, 1,
             1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
+        colors = ['blue', 'red', 'red', 'black', 'cyan',
             'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
             1.0, 1.0, 1.0, 1.0, 1.0]
@@ -124,44 +120,44 @@ class am2(gr.top_block, Qt.QWidget):
             -1, -1, -1, -1, -1]
 
 
-        for i in range(1):
+        for i in range(2):
             if len(labels[i]) == 0:
-                self.qtgui_time_sink_x_1_0.set_line_label(i, "Data {0}".format(i))
+                self.qtgui_time_sink_x_0_0_0.set_line_label(i, "Data {0}".format(i))
             else:
-                self.qtgui_time_sink_x_1_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_1_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_1_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_1_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_1_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_1_0.set_line_alpha(i, alphas[i])
+                self.qtgui_time_sink_x_0_0_0.set_line_label(i, labels[i])
+            self.qtgui_time_sink_x_0_0_0.set_line_width(i, widths[i])
+            self.qtgui_time_sink_x_0_0_0.set_line_color(i, colors[i])
+            self.qtgui_time_sink_x_0_0_0.set_line_style(i, styles[i])
+            self.qtgui_time_sink_x_0_0_0.set_line_marker(i, markers[i])
+            self.qtgui_time_sink_x_0_0_0.set_line_alpha(i, alphas[i])
 
-        self._qtgui_time_sink_x_1_0_win = sip.wrapinstance(self.qtgui_time_sink_x_1_0.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_1_0_win)
-        self.qtgui_time_sink_x_1 = qtgui.time_sink_f(
+        self._qtgui_time_sink_x_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0_0.pyqwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_0_win)
+        self.qtgui_time_sink_x_0_0 = qtgui.time_sink_f(
             1024, #size
             samp_rate, #samp_rate
-            "AM", #name
-            1 #number of inputs
+            '', #name
+            2 #number of inputs
         )
-        self.qtgui_time_sink_x_1.set_update_time(0.10)
-        self.qtgui_time_sink_x_1.set_y_axis(-1, 1)
+        self.qtgui_time_sink_x_0_0.set_update_time(0.30)
+        self.qtgui_time_sink_x_0_0.set_y_axis(-2, 2)
 
-        self.qtgui_time_sink_x_1.set_y_label('Amplitude', "")
+        self.qtgui_time_sink_x_0_0.set_y_label('Amplitude', "")
 
-        self.qtgui_time_sink_x_1.enable_tags(True)
-        self.qtgui_time_sink_x_1.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_1.enable_autoscale(True)
-        self.qtgui_time_sink_x_1.enable_grid(False)
-        self.qtgui_time_sink_x_1.enable_axis_labels(True)
-        self.qtgui_time_sink_x_1.enable_control_panel(False)
-        self.qtgui_time_sink_x_1.enable_stem_plot(False)
+        self.qtgui_time_sink_x_0_0.enable_tags(False)
+        self.qtgui_time_sink_x_0_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, 0.5, 0, 0, "")
+        self.qtgui_time_sink_x_0_0.enable_autoscale(False)
+        self.qtgui_time_sink_x_0_0.enable_grid(True)
+        self.qtgui_time_sink_x_0_0.enable_axis_labels(True)
+        self.qtgui_time_sink_x_0_0.enable_control_panel(True)
+        self.qtgui_time_sink_x_0_0.enable_stem_plot(False)
 
 
-        labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
+        labels = ['Demodulada', 'Modulante', 'AM modulation', '', '',
+            '', '', '', '', '']
+        widths = [1.5, 1.5, 1.5, 1, 1,
             1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
+        colors = ['blue', 'green', 'red', 'black', 'cyan',
             'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
         alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
             1.0, 1.0, 1.0, 1.0, 1.0]
@@ -171,78 +167,36 @@ class am2(gr.top_block, Qt.QWidget):
             -1, -1, -1, -1, -1]
 
 
-        for i in range(1):
+        for i in range(2):
             if len(labels[i]) == 0:
-                self.qtgui_time_sink_x_1.set_line_label(i, "Data {0}".format(i))
+                self.qtgui_time_sink_x_0_0.set_line_label(i, "Data {0}".format(i))
             else:
-                self.qtgui_time_sink_x_1.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_1.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_1.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_1.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_1.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_1.set_line_alpha(i, alphas[i])
+                self.qtgui_time_sink_x_0_0.set_line_label(i, labels[i])
+            self.qtgui_time_sink_x_0_0.set_line_width(i, widths[i])
+            self.qtgui_time_sink_x_0_0.set_line_color(i, colors[i])
+            self.qtgui_time_sink_x_0_0.set_line_style(i, styles[i])
+            self.qtgui_time_sink_x_0_0.set_line_marker(i, markers[i])
+            self.qtgui_time_sink_x_0_0.set_line_alpha(i, alphas[i])
 
-        self._qtgui_time_sink_x_1_win = sip.wrapinstance(self.qtgui_time_sink_x_1.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_1_win)
-        self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
-            1024, #size
-            samp_rate, #samp_rate
-            "Modulante", #name
-            1 #number of inputs
-        )
-        self.qtgui_time_sink_x_0.set_update_time(0.10)
-        self.qtgui_time_sink_x_0.set_y_axis(-1, 1)
-
-        self.qtgui_time_sink_x_0.set_y_label('Amplitude', "")
-
-        self.qtgui_time_sink_x_0.enable_tags(True)
-        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0.enable_autoscale(True)
-        self.qtgui_time_sink_x_0.enable_grid(False)
-        self.qtgui_time_sink_x_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_0.enable_stem_plot(False)
-
-
-        labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
-            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-        styles = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        markers = [-1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-
-
-        for i in range(1):
-            if len(labels[i]) == 0:
-                self.qtgui_time_sink_x_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_time_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_win)
+        self._qtgui_time_sink_x_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0_0.pyqwidget(), Qt.QWidget)
+        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_0_win)
         self.low_pass_filter_0 = filter.fir_filter_fff(
             1,
             firdes.low_pass(
-                1,
+                2,
                 samp_rate,
                 15000,
                 200,
                 firdes.WIN_HAMMING,
                 6.76))
         self.dc_blocker_xx_0 = filter.dc_blocker_ff(32, True)
+        self.blocks_throttle_0_0_0 = blocks.throttle(gr.sizeof_float*1, samp_rate,True)
+        self.blocks_throttle_0_0 = blocks.throttle(gr.sizeof_float*1, samp_rate,True)
+        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_float*1, samp_rate,True)
         self.blocks_multiply_xx_1 = blocks.multiply_vff(1)
         self.blocks_multiply_xx_0 = blocks.multiply_vff(1)
+        self.blocks_multiply_const_vxx_1_0 = blocks.multiply_const_ff(5)
+        self.blocks_multiply_const_vxx_1 = blocks.multiply_const_ff(3)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_ff(M)
         self.blocks_add_xx_1 = blocks.add_vff(1)
         self.blocks_add_xx_0 = blocks.add_vff(1)
@@ -256,9 +210,9 @@ class am2(gr.top_block, Qt.QWidget):
                 10000,
                 firdes.WIN_HAMMING,
                 6.76))
-        self.analog_sig_source_x_1_0 = analog.sig_source_f(samp_rate, analog.GR_COS_WAVE, fol, 1, 0, 0)
-        self.analog_sig_source_x_1 = analog.sig_source_f(samp_rate, analog.GR_COS_WAVE, 100000, 10, 0, 0)
-        self.analog_sig_source_x_0 = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE, 1000, 2, 0, 0)
+        self.analog_sig_source_x_1_0 = analog.sig_source_f(samp_rate, analog.GR_COS_WAVE, 100000, 1, 0, 0)
+        self.analog_sig_source_x_1 = analog.sig_source_f(samp_rate, analog.GR_COS_WAVE, 100000, 15, 0, 0)
+        self.analog_sig_source_x_0 = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE, 1000, 1, 0, 0)
         self.analog_noise_source_x_0 = analog.noise_source_f(analog.GR_GAUSSIAN, noise, 0)
         self.analog_const_source_x_0 = analog.sig_source_f(0, analog.GR_CONST_WAVE, 0, 0, 1)
 
@@ -270,17 +224,23 @@ class am2(gr.top_block, Qt.QWidget):
         self.connect((self.analog_const_source_x_0, 0), (self.blocks_add_xx_0, 0))
         self.connect((self.analog_noise_source_x_0, 0), (self.blocks_add_xx_1, 0))
         self.connect((self.analog_sig_source_x_0, 0), (self.blocks_multiply_const_vxx_0, 0))
-        self.connect((self.analog_sig_source_x_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.analog_sig_source_x_0, 0), (self.blocks_throttle_0_0, 0))
         self.connect((self.analog_sig_source_x_1, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.analog_sig_source_x_1_0, 0), (self.blocks_multiply_xx_1, 1))
         self.connect((self.band_pass_filter_0, 0), (self.blocks_multiply_xx_1, 0))
         self.connect((self.blocks_add_xx_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.blocks_add_xx_1, 0), (self.band_pass_filter_0, 0))
+        self.connect((self.blocks_add_xx_1, 0), (self.blocks_throttle_0, 0))
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_add_xx_0, 1))
+        self.connect((self.blocks_multiply_const_vxx_1, 0), (self.blocks_throttle_0_0_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_1_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_add_xx_1, 1))
-        self.connect((self.blocks_multiply_xx_0, 0), (self.qtgui_time_sink_x_1, 0))
         self.connect((self.blocks_multiply_xx_1, 0), (self.low_pass_filter_0, 0))
-        self.connect((self.dc_blocker_xx_0, 0), (self.qtgui_time_sink_x_1_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.qtgui_time_sink_x_0_0_0, 1))
+        self.connect((self.blocks_throttle_0_0, 0), (self.blocks_multiply_const_vxx_1_0, 0))
+        self.connect((self.blocks_throttle_0_0, 0), (self.qtgui_time_sink_x_0_0, 1))
+        self.connect((self.blocks_throttle_0_0_0, 0), (self.qtgui_time_sink_x_0_0, 0))
+        self.connect((self.dc_blocker_xx_0, 0), (self.blocks_multiply_const_vxx_1, 0))
         self.connect((self.low_pass_filter_0, 0), (self.dc_blocker_xx_0, 0))
 
     def closeEvent(self, event):
@@ -297,10 +257,12 @@ class am2(gr.top_block, Qt.QWidget):
         self.analog_sig_source_x_1.set_sampling_freq(self.samp_rate)
         self.analog_sig_source_x_1_0.set_sampling_freq(self.samp_rate)
         self.band_pass_filter_0.set_taps(firdes.band_pass(1, self.samp_rate, 50000, 150000, 10000, firdes.WIN_HAMMING, 6.76))
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 15000, 200, firdes.WIN_HAMMING, 6.76))
-        self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
-        self.qtgui_time_sink_x_1.set_samp_rate(self.samp_rate)
-        self.qtgui_time_sink_x_1_0.set_samp_rate(self.samp_rate)
+        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
+        self.blocks_throttle_0_0.set_sample_rate(self.samp_rate)
+        self.blocks_throttle_0_0_0.set_sample_rate(self.samp_rate)
+        self.low_pass_filter_0.set_taps(firdes.low_pass(2, self.samp_rate, 15000, 200, firdes.WIN_HAMMING, 6.76))
+        self.qtgui_time_sink_x_0_0.set_samp_rate(self.samp_rate)
+        self.qtgui_time_sink_x_0_0_0.set_samp_rate(self.samp_rate)
 
     def get_noise(self):
         return self.noise
@@ -308,13 +270,6 @@ class am2(gr.top_block, Qt.QWidget):
     def set_noise(self, noise):
         self.noise = noise
         self.analog_noise_source_x_0.set_amplitude(self.noise)
-
-    def get_fol(self):
-        return self.fol
-
-    def set_fol(self, fol):
-        self.fol = fol
-        self.analog_sig_source_x_1_0.set_frequency(self.fol)
 
     def get_M(self):
         return self.M
