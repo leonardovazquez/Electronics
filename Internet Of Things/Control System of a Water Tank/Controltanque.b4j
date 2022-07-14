@@ -1,0 +1,499 @@
+﻿AppType=JavaFX
+Build1=Tanque,b4j.tanque
+File1=azul.jpg
+File2=black.jpg
+File3=image.png
+File4=Layout1.bjl
+File5=tanque.jpg
+FileGroup1=Default Group
+FileGroup2=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+FileGroup5=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=jgauges
+Library4=jrandomaccessfile
+Library5=jserial
+Library6=jxui
+NumberOfFiles=5
+NumberOfLibraries=6
+NumberOfModules=0
+Version=9.5
+@EndOfDesignText@
+#Region Project Attributes 
+	#MainFormWidth: 1366
+	#MainFormHeight: 675 
+#End Region
+
+Sub Process_Globals
+	Private fx As JFX
+	Private MainForm As Form
+	Private xui As XUI 
+	Private astream As AsyncStreams
+	
+	'Private tbtnAuto As ToggleButton
+	Private pnlEngine As Pane
+	'Private tbtnEngine As ToggleButton
+	Private lblEngine As Label
+	
+	Private sp As Serial
+	Private cmbPort As ComboBox
+	Private btnConectar As Button
+	
+	Private txtIDEN As TextField
+	Private btnIDEN As Button
+	Private lblIDEN As Label
+	
+	Dim comando As String, cadena As String
+	Private lblMeasr As Label
+	Private pnlONOFF As Pane
+	Private lblONOFF As Label
+	Private pnlIDEN As Pane
+	Private pnlUmbral As Pane
+	Private txtUmbInf As TextField
+	Private txtUmbSup As TextField
+
+	Private sldUmbSup As Slider
+	Private sldUmbMin As Slider
+    Private lblUmbSup As Label
+	Private lblUmbInf As Label
+	
+	Private txtEngine As TextField
+	Private btnReset As Button
+	Private txtStatus As TextField
+	Private Pane1 As Pane
+	Private txtPuerta As TextField
+	Private lblPuerta As Label
+	Private txtPELIGRO As TextField
+	Private btnConsul As Button
+	
+	Dim v1 As Int
+	Dim v2 As Int
+	Dim v3 As Int
+	Dim v0 As Int
+	Dim v11 As Int
+	Dim v22 As Int
+	Dim v33 As Int
+	Dim v00 As Int
+	
+	Private pnlUmbral As Pane
+	Private sldUmbMin As Slider
+	Private sldUmbSup As Slider
+	Private txtUmbInf As TextField
+	Private txtUmbSup As TextField
+
+	
+	Private rbtnON As RadioButton
+	Private rbtnOFF As RadioButton
+
+	Private Gauge1 As Gauge
+	Dim Timer1 As Timer
+	Private lblFyH As Label
+	Private sldUmbSupCrit As Slider
+	Private txtUmbSupCrit As TextField
+	Private lblUmbSupCrit As Label
+	Private lblUmbInfCrit As Label
+	Private txtUmbInfCrit As TextField
+	Private sldUmbMinCrit As Slider
+	Private u_consul As Button
+
+	Private muestras_csv As List
+	Private nombre As String
+	Private hora As String
+	Private valores_string As String
+	
+	Private btn_registro As Button
+	Private btn_guardar As Button
+	
+	Private cnvGrafico As Canvas
+	'Dim lista_vector As List
+	'Dim lista_graficacion As List
+	Dim muestras_grf As List
+	Dim x0,x1,y0,y1 As Int
+	Private Pane5 As Pane
+	Private lblHist As Label
+	Private Label3 As Label
+	Dim nx As Int
+	Dim ny As Int
+	
+	Private cnvONOFF As Canvas
+	Private cnvENGIN1 As Canvas
+	Private cnvENGIN2 As Canvas
+	Private Gauge2 As Gauge
+	Private btnoff As Button
+	Private btnauto As Button
+	Private btnengin As Button
+	Private auto As Int
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	MainForm = Form1
+	MainForm.RootPane.LoadLayout("Layout1")
+	MainForm.Show
+	sp.Initialize("")
+	cmbPort.Items.AddAll(sp.ListPorts)
+	'lista_vector.Initialize
+	'lista_graficacion.Initialize
+	Timer1.Initialize("Timer1",1000)
+	Timer1.Interval= 1000
+	Timer1.Enabled = True
+	v0 = 200
+	v1 = 900
+	v2 = 100
+	v3 = 1000
+	v00 = 200
+	v11 = 900
+	v22 = 100
+	v33 = 1000
+	txtUmbInf.Text=10&"%"
+	txtUmbSup.Text=20&"%"
+	txtUmbInfCrit.Text=88&"%"
+	txtUmbSupCrit.Text=98&"%"
+     
+	Gauge1.AddSection(0, 1, fx.Colors.Red)
+	Gauge1.AddSection(1, 1022, fx.Colors.Cyan)
+	Gauge1.AddSection(1022, 1023, fx.Colors.Red)
+	Gauge2.AddSection(0, 100, fx.Colors.Cyan)
+	
+	
+	muestras_csv.Initialize
+	muestras_csv.Add("Porcentajes"&";"&"Fecha y Hora"&";"&"Identificacion")
+	
+	
+	cnvGrafico.ClearRect(0,0,360,280)
+	cnvGrafico.DrawRect(0,0,360,280,fx.Colors.DarkGray,True, 1)
+
+	muestras_grf.Initialize
+
+	nx=2
+	ny=2
+	
+	cnvONOFF.DrawCircle(cnvONOFF.Height/2,cnvONOFF.Height/2,cnvONOFF.Height/2,fx.Colors.DarkGray,True,1)
+	cnvENGIN1.DrawCircle(cnvENGIN1.Height/2,cnvENGIN1.Height/2,cnvENGIN1.Height/2,fx.Colors.DarkGray,True,1)
+	cnvENGIN2.DrawCircle(cnvENGIN2.Height/2,cnvENGIN2.Height/2,cnvENGIN2.Height/2,fx.Colors.DarkGray,True,1)
+	
+	auto = 1
+End Sub
+
+Sub Timer1_Tick
+	DateTime.DateFormat="dd:MM:YYYY HH:mm:ss"
+	hora = DateTime.Date(DateTime.now)
+	lblFyH.Text= hora
+	muestras_csv.Add(valores_string & "%"& ";"&  hora & ";" &nombre)
+End Sub
+
+Private Sub btnConectar_Click
+	sp.Open(cmbPort.Value)
+	sp.SetParams(9600,8,1,0)
+	astream.Initialize(sp.GetInputStream,sp.GetOutputStream, "astream")
+	btnConectar.Enabled=False
+	comando="ONOFF2"
+	Dim s As String = comando & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+
+End Sub
+
+Sub AStream_Error
+	Log("Error: " & LastException)
+	astream.Close
+	AStream_Terminated
+End Sub
+
+Sub AStream_Terminated
+	Log("Connection is broken.")
+	btnConectar.Enabled = True
+End Sub
+
+Sub AStream_NewData (Buffer() As Byte)
+	Private s As String = BytesToString(Buffer,0,Buffer.Length,"UTF8")
+	cadena = cadena & s
+	If cadena.EndsWith(Chr(10)) Then
+		Dim longitud As Int=cadena.Length
+				If cadena.SubString2(0,2)="ID" Then
+			        nombre = cadena.SubString2(2,longitud-3)
+					txtIDEN.Text = nombre
+	  			End If
+				If cadena.SubString2(0,3)="UMB" Then
+					v00 = cadena.SubString2(3,cadena.IndexOf(","))
+					txtUmbInf.Text=NumberFormat(v00*100/1023,0,0)&"%"
+					v11 = cadena.SubString2(cadena.IndexOf(",")+1,cadena.IndexOf(";"))
+					txtUmbSup.Text=NumberFormat(v11*100/1023,0,0)&"%"
+					v22 = cadena.SubString2(cadena.IndexOf(";")+1,cadena.IndexOf(":"))
+					txtUmbInfCrit.Text=NumberFormat(v22*100/1023,0,0)&"%"
+					v33 =cadena.SubString2(cadena.IndexOf(":")+1,longitud-2)
+					txtUmbSupCrit.Text=NumberFormat(v33*100/1023,0,0)&"%"
+				End If
+				If cadena.SubString2(0,3)="MSG" Then
+			       Dim valores As Int = cadena.SubString2(5,longitud-2)
+		           valores_string = NumberFormat(valores*100/1023,0,1)
+			       
+			       muestras_grf.Add(valores_string)
+			       graficar(valores_string)
+				   Gauge1.Value = valores
+			       Gauge2.Value=NumberFormat(valores*100/1023,0,1)
+			       If cadena.SubString2(5,longitud-2) <= v22 Then
+				       txtPELIGRO.Text= "Alerta! Nivel Crítico Mínimo"
+			       Else If cadena.SubString2(5,longitud-2) >= v33 Then
+			           txtPELIGRO.Text= "Alerta! Nivel Crítico Máximo"
+			       Else 
+			           txtPELIGRO.Text= "Normal"
+			       End If
+			       If cadena.SubString2(4,5) =1 Then
+				       txtPuerta.Text= "ABIERTA"
+				       Dim s As String = "ALARM" & 1 & Chr(10)
+				       astream.Write(s.GetBytes("UTF8"))
+			       Else
+				       txtPuerta.Text= "CERRADA"
+				       Dim s As String = "ALARM" & 0 & Chr(10)
+				       astream.Write(s.GetBytes("UTF8"))
+			       End If
+		           If cadena.SubString2(3,4)=0 Then
+				       txtEngine.Text="Apagada"
+					   If (auto = 1) Then
+				       cnvENGIN1.DrawCircle(cnvENGIN1.Height/2,cnvENGIN1.Height/2,cnvENGIN1.Height/2,fx.Colors.Red,True,1)
+				       cnvENGIN2.DrawCircle(cnvENGIN2.Height/2,cnvENGIN2.Height/2,cnvENGIN2.Height/2,fx.Colors.DarkGray,True,1)
+		 			   Else If (auto=2) Then
+					cnvENGIN1.DrawCircle(cnvENGIN1.Height/2,cnvENGIN1.Height/2,cnvENGIN1.Height/2,fx.Colors.DarkGray,True,1)
+					cnvENGIN2.DrawCircle(cnvENGIN2.Height/2,cnvENGIN2.Height/2,cnvENGIN2.Height/2,fx.Colors.Red,True,1)
+				       End If
+				   Else If cadena.SubString2(3,4)=1 Then
+				       txtEngine.Text="Encendida"
+					   If (auto=1) Then
+				       cnvENGIN1.DrawCircle(cnvENGIN1.Height/2,cnvENGIN1.Height/2,cnvENGIN1.Height/2,fx.Colors.Green,True,1)
+					   cnvENGIN2.DrawCircle(cnvENGIN2.Height/2,cnvENGIN2.Height/2,cnvENGIN2.Height/2,fx.Colors.DarkGray,True,1)
+			           Else If (auto=2) Then
+				       cnvENGIN2.DrawCircle(cnvENGIN2.Height/2,cnvENGIN2.Height/2,cnvENGIN2.Height/2,fx.Colors.Green,True,1)
+					   cnvENGIN1.DrawCircle(cnvENGIN1.Height/2,cnvENGIN1.Height/2,cnvENGIN1.Height/2,fx.Colors.DarkGray,True,1)
+					   End If
+					   End If
+	            End If
+			    If cadena.SubString2(0,3)="SYS" Then	
+	                If cadena.SubString2(3,longitud-2)=1 Then
+		               txtStatus.Text="Encendido"
+				       rbtnON.Selected = True
+					   rbtnOFF.Selected = False
+				       cnvONOFF.DrawCircle(cnvONOFF.Height/2,cnvONOFF.Height/2,cnvONOFF.Height/2,fx.Colors.Green,True,1)
+	                Else If cadena.SubString2(3,longitud-2)=0 Then
+		               txtStatus.Text="Apagado"
+				       rbtnON.Selected = False
+				       rbtnOFF.Selected = True
+			           cnvONOFF.DrawCircle(cnvONOFF.Height/2,cnvONOFF.Height/2,cnvONOFF.Height/2,fx.Colors.Red,True,1)
+			           cnvENGIN1.DrawCircle(cnvENGIN1.Height/2,cnvENGIN1.Height/2,cnvENGIN1.Height/2,fx.Colors.DarkGray,True,1)
+					   cnvENGIN2.DrawCircle(cnvENGIN2.Height/2,cnvENGIN2.Height/2,cnvENGIN2.Height/2,fx.Colors.DarkGray,True,1)
+					End If
+			    End If
+				If cadena.SubString2(0,4)="MODE" Then
+					Dim aux As Int = cadena.SubString2(4,5) 
+					If (aux=2) Then
+					auto = 2
+					Else 
+					auto = 1
+					End If		  		  
+				End If
+    		    cadena=""
+	End If
+End Sub
+
+Sub MainForm_Closed
+	sp.Close
+	astream.Close
+End Sub
+
+
+
+Private Sub btnIDEN_Click
+	comando="ID2"
+	Dim s As String = comando &"ID" & txtIDEN.Text & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+	comando="IDEN"
+	Dim s As String = comando & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+End Sub
+
+Private Sub sldUmbMin_ValueChange (Value As Double)
+	v0 = Value
+	txtUmbInf.Text=NumberFormat(v0*100/1023,0,0)&"%"
+End Sub
+
+Private Sub sldUmbSup_ValueChange (Value As Double)
+	v1 = Value
+	txtUmbSup.Text=NumberFormat(v1*100/1023,0,0)&"%"
+End Sub
+
+Private Sub sldUmbMinCrit_ValueChange (Value As Double)
+	v2 = Value
+	txtUmbInfCrit.Text=NumberFormat(v2*100/1023,0,0)&"%"
+End Sub
+
+Private Sub sldUmbSupCrit_ValueChange (Value As Double)
+	v3 = Value
+	txtUmbSupCrit.Text=NumberFormat(v3*100/1023,0,0)&"%"
+End Sub
+
+Private Sub u_consul_Click
+	Dim s As String = "CONFIG0" & v0 & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+	Dim s As String = "CONFIG1" & v1 & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+	Dim s As String = "CONFIG2" & v2 & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+	Dim s As String = "CONFIG3" & v3 & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+	Dim s As String = "THRQRY" & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+End Sub
+
+Private Sub btnReset_Click
+	Dim s As String = "THRRES" & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))	
+	Dim s As String = "THRQRY" & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+End Sub
+
+Private Sub btnConsul_Click
+	comando="IDEN"
+	Dim s As String = comando & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+End Sub
+
+
+Private Sub rbtnON_SelectedChange(Selected As Boolean)
+	comando="ONOFF"
+	Dim estado As String
+	If rbtnON.Selected Then
+		estado=1
+		rbtnOFF.Selected = False
+		txtStatus.Text="Encendido"
+		Dim s As String = "THRQRY" & Chr(10)
+		astream.Write(s.GetBytes("UTF8"))
+		comando="IDEN"
+		Dim s As String = comando & Chr(10)
+		astream.Write(s.GetBytes("UTF8"))
+	Else
+		estado=0
+		rbtnON.Selected = False
+		txtStatus.Text="Apagado"
+		cnvENGIN1.DrawCircle(cnvENGIN1.Height/2,cnvENGIN1.Height/2,cnvENGIN1.Height/2,fx.Colors.DarkGray,True,1)
+		cnvENGIN2.DrawCircle(cnvENGIN2.Height/2,cnvENGIN2.Height/2,cnvENGIN2.Height/2,fx.Colors.DarkGray,True,1)
+	End If
+	Dim s As String = comando & estado & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+	Dim s As String = "THRQRY" & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+End Sub
+
+Private Sub rbtnOFF_SelectedChange(Selected As Boolean)
+	comando="ONOFF"
+	Dim estado As String
+	If rbtnOFF.Selected Then
+		estado=0
+		rbtnON.Selected = False
+		txtStatus.Text="Apagado"
+		cnvONOFF.DrawCircle(cnvONOFF.Height/2,cnvONOFF.Height/2,cnvONOFF.Height/2,fx.Colors.Red,True,1)
+		cnvENGIN1.DrawCircle(cnvENGIN1.Height/2,cnvENGIN1.Height/2,cnvENGIN1.Height/2,fx.Colors.DarkGray,True,1)
+		cnvENGIN2.DrawCircle(cnvENGIN2.Height/2,cnvENGIN2.Height/2,cnvENGIN2.Height/2,fx.Colors.DarkGray,True,1)
+	Else
+		estado=1
+		rbtnOFF.Selected = False
+		txtStatus.Text="Encendido"
+		cnvONOFF.DrawCircle(cnvONOFF.Height/2,cnvONOFF.Height/2,cnvONOFF.Height/2,fx.Colors.Green,True,1)
+	End If
+	Dim s As String = comando & estado & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+	Dim s As String = "THRQRY" & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+End Sub
+
+Private Sub btn_registro_Click
+	muestras_csv.Clear
+	muestras_csv.Add("Porcentajes"&";"&"Fecha y Hora"&";"&"Identificacion")
+	
+	nx=2
+	ny=2	
+	muestras_grf.Clear
+	cnvGrafico.ClearRect(0,0,360,280)
+	cnvGrafico.DrawRect(0,0,360,280,fx.Colors.DarkGray,True, 1)
+End Sub
+
+Private Sub btn_guardar_Click
+	Dim fc As FileChooser
+	fc.Initialize
+	fc.InitialDirectory = File.DirApp
+	fc.Title = "Nombrar .csv:"
+	fc.setExtensionFilter("Excel file", Array As String("*.csv*"))
+
+	Dim fn As String = fc.ShowSave(MainForm)
+	If fn = "" Then Return
+	File.WriteList(File.GetFileParent(fn), File.GetName(fn), muestras_csv)
+End Sub
+
+Sub graficar(valor As String)
+	Dim color(3) As Object
+	color(0)=fx.Colors.Red
+	color(1)=fx.Colors.Blue
+	color(2)=fx.Colors.Cyan
+
+		If (muestras_grf.Size>1) Then						
+			x1=nx
+			y1=valor
+			Dim y11 As Double=escalar_y(0,100,280,y1)
+			
+			x0=nx-1
+			Dim anterior As String=muestras_grf.Get(ny-2)
+			y0=anterior
+			Dim y00 As Double=escalar_y(0,100,280,y0)
+			
+			cnvGrafico.DrawLine (x0,280-y00, x1, 280-y11, color(2), 2)
+			nx=nx+1	
+			ny = ny+1	
+		End If
+		
+		If (nx=360) Then
+		    cnvGrafico.ClearRect(0,0,360,280)
+		cnvGrafico.DrawRect(0,0,360,280,fx.Colors.DarkGray,True, 1)
+			nx=2
+		End If
+		
+End Sub
+
+Sub escalar_x(w_inf As Int, w_sup As Int, w_destino As Int,x As Int) As Double
+	Return(map(x,w_inf,w_sup,0,w_destino))
+End Sub
+Sub escalar_y(h_inf As Int, h_sup As Int,h_destino As Int, y As Int) As Double
+	Return(map(y,h_inf,h_sup,0,h_destino))
+End Sub
+
+Sub map(val As Double, rei As Double, res As Double, rsi As Double, rss As Double) As Double
+	'y-yo=m(x-x0) m=dy/dx
+	Dim m As Double=(rss-rsi)/(res-rei)
+	Dim y As Double = m*(val-rei)+rsi
+	Return(y)
+End Sub
+
+Private Sub btnoff_Click
+	Dim s As String = "ENGIN" & 0 & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+	If (auto = 1) Then
+		cnvENGIN1.DrawCircle(cnvENGIN1.Height/2,cnvENGIN1.Height/2,cnvENGIN1.Height/2,fx.Colors.Red,True,1)
+		cnvENGIN2.DrawCircle(cnvENGIN2.Height/2,cnvENGIN2.Height/2,cnvENGIN2.Height/2,fx.Colors.DarkGray,True,1)
+	Else If (auto=2) Then
+		cnvENGIN1.DrawCircle(cnvENGIN1.Height/2,cnvENGIN1.Height/2,cnvENGIN1.Height/2,fx.Colors.DarkGray,True,1)
+		cnvENGIN2.DrawCircle(cnvENGIN2.Height/2,cnvENGIN2.Height/2,cnvENGIN2.Height/2,fx.Colors.Red,True,1)
+	End If
+End Sub
+
+Private Sub btnauto_Click
+	auto = 2
+	Dim s As String = "ENGIN" & 2 & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+	cnvENGIN1.DrawCircle(cnvENGIN1.Height/2,cnvENGIN1.Height/2,cnvENGIN1.Height/2,fx.Colors.DarkGray,True,1)
+End Sub
+
+Private Sub btnengin_Click
+	auto = 1
+	Dim s As String = "ENGIN" & 1 & Chr(10)
+	astream.Write(s.GetBytes("UTF8"))
+	cnvENGIN2.DrawCircle(cnvENGIN2.Height/2,cnvENGIN2.Height/2,cnvENGIN2.Height/2,fx.Colors.DarkGray,True,1)
+End Sub

@@ -1,0 +1,98 @@
+﻿Build1=Controltanque,anywheresoftware.b4a.samples.controltanque
+File1=1.bal
+File2=2.bal
+File3=azul.jpg
+FileGroup1=Default Group
+FileGroup2=Default Group
+FileGroup3=Default Group
+Group=Default Group
+Library1=core
+Library2=randomaccessfile
+Library3=runtimepermissions
+Library4=serial
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="30"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~
+Module1=BluetoothManager
+Module2=Controltanque
+Module3=Starter
+NumberOfFiles=3
+NumberOfLibraries=4
+NumberOfModules=3
+Version=11.5
+@EndOfDesignText@
+#Region Module Attributes
+	#FullScreen: False
+	#IncludeTitle: True
+	#ApplicationLabel: Control del tanque
+	#VersionCode: 1
+	#VersionName: Controltanque
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+#End Region
+#BridgeLogger: true
+Sub Process_Globals
+	Private rp As RuntimePermissions
+End Sub
+
+Sub Globals
+	Private btnSearchForDevices As Button
+
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("1")
+End Sub
+
+Sub Activity_Resume
+	UpdateState
+End Sub
+
+Public Sub UpdateState
+	btnSearchForDevices.Enabled = Starter.Manager.BluetoothState
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+	
+End Sub
+
+Sub btnSearchForDevices_Click
+	rp.CheckAndRequest(rp.PERMISSION_ACCESS_COARSE_LOCATION)
+	Wait For Activity_PermissionResult (Permission As String, Result As Boolean)
+	If Result = False Then
+		ToastMessageShow("Sin permisos...", False)
+		Return
+	End If
+	Dim success As Boolean = Starter.Manager.SearchForDevices
+	If success = False Then
+		ToastMessageShow("Error en el inicio de búsqueda", True)
+	Else
+		ProgressDialogShow2("Buscando dispositivos...", False)
+	End If
+End Sub
+
+Public Sub DiscoverFinished
+	ProgressDialogHide
+	If Starter.Manager.foundDevices.Size = 0 Then
+		ToastMessageShow("Ningún dispositivo encontrado", True)
+	Else
+		Dim l As List
+		l.Initialize
+		For Each nm As NameAndMac In Starter.Manager.foundDevices
+			l.Add(nm.Name)
+		Next
+		InputListAsync(l, "Elegir dispositivo para conex", -1, True)
+		Wait For InputList_Result (Index As Int)
+		If Index <> DialogResponse.CANCEL Then
+			Dim device As NameAndMac = Starter.Manager.foundDevices.Get(Index)
+			Starter.Manager.ConnectTo(device)
+			ProgressDialogShow2($"Intentando conectar: ${device.Name} (${device.Mac})"$, False)
+		End If
+	End If
+End Sub
+
+Public Sub AfterConnect (Success As Boolean)
+	ProgressDialogHide
+End Sub
+
+
+
